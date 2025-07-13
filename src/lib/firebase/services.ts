@@ -15,6 +15,7 @@ import {
   where
 } from 'firebase/firestore';
 import {db} from './config';
+import {getIsoDate} from './utils/getIsoDate';
 
 // Posts Service
 export const postsService = {
@@ -51,15 +52,14 @@ export const postsService = {
       }
 
       const snapshot = await getDocs(q);
-      return snapshot.docs.map(
-        (doc) =>
-          ({
-            id: doc.id,
-            ...doc.data(),
-            createdAt: doc.data().createdAt?.toDate() || new Date(),
-            updatedAt: doc.data().updatedAt?.toDate() || new Date()
-          }) as Post
-      );
+      return snapshot.docs.map((doc) => {
+        return {
+          id: doc.id,
+          ...doc.data(),
+          createdAt: getIsoDate(doc.data().createdAt),
+          updatedAt: getIsoDate(doc.data().updatedAt)
+        } as Post;
+      });
     } catch (error) {
       console.error('Error fetching posts:', error);
       throw new Error('Failed to fetch posts');
@@ -76,8 +76,8 @@ export const postsService = {
         return {
           id: docSnap.id,
           ...data,
-          createdAt: data.createdAt?.toDate() || new Date(),
-          updatedAt: data.updatedAt?.toDate() || new Date()
+          createdAt: getIsoDate(data.createdAt),
+          updatedAt: getIsoDate(data.updatedAt)
         } as Post;
       }
       return null;
@@ -134,8 +134,8 @@ export const postsService = {
           ({
             id: doc.id,
             ...doc.data(),
-            createdAt: doc.data().createdAt?.toDate() || new Date(),
-            updatedAt: doc.data().updatedAt?.toDate() || new Date()
+            createdAt: getIsoDate(doc.data().createdAt),
+            updatedAt: getIsoDate(doc.data().updatedAt)
           }) as Post
       );
 
@@ -187,7 +187,7 @@ export const commentsService = {
           ({
             id: doc.id,
             ...doc.data(),
-            createdAt: doc.data().createdAt?.toDate() || new Date()
+            createdAt: getIsoDate(doc.data().createdAt)
           }) as Comment
       );
     } catch (error) {

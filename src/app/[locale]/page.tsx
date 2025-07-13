@@ -1,19 +1,30 @@
-import { Locale, useTranslations } from 'next-intl';
+import PostList from '@/components/blog/PostList';
+import MainLayout from '@/components/layout/MainLayout';
+import { Locale } from 'next-intl';
 import { setRequestLocale } from 'next-intl/server';
-import { use } from 'react';
 
 type Props = {
   params: Promise<{ locale: Locale }>;
 };
 
-export default function IndexPage({ params }: Props) {
-  const { locale } = use(params);
-
-  // Enable static rendering
+export default async function HomePage({ params }: Props) {
+  const { locale } = await params;
   setRequestLocale(locale);
 
-  const t = useTranslations('Manifest');
   return (
-    <h1>{t('title')}</h1>
+    <MainLayout>
+      <div className="space-y-8">
+        <div className="text-center">
+          <h1 className="text-4xl font-bold text-gray-900 mb-4">
+            Welcome to My Blog
+          </h1>
+          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+            Discover stories, insights, and ideas from our community of writers
+          </p>
+        </div>
+
+        <PostList />
+      </div>
+    </MainLayout>
   );
 }

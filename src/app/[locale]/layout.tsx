@@ -1,3 +1,4 @@
+import ReduxProvider from '@/components/layout/ReduxProvider';
 import { routing } from '@/i18n/routing';
 import { clsx } from 'clsx';
 import { hasLocale, Locale, NextIntlClientProvider } from 'next-intl';
@@ -41,9 +42,11 @@ export default async function LocaleLayout({ children, params }: Props) {
   return (
     <html className="h-full" lang={locale}>
       <body className={clsx(inter.className, 'flex h-full flex-col')}>
-        <NextIntlClientProvider>
-          {children}
-        </NextIntlClientProvider>
+        <ReduxProvider>
+          <NextIntlClientProvider>
+            {children}
+          </NextIntlClientProvider>
+        </ReduxProvider>
       </body>
     </html>
   );

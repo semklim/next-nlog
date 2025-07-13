@@ -5,8 +5,8 @@ export interface Post {
   author: string;
   category?: string;
   excerpt: string;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface Comment {
@@ -14,7 +14,7 @@ export interface Comment {
   postId: string;
   author: string;
   content: string;
-  createdAt: Date;
+  createdAt: string;
 }
 
 export interface CreatePostData {

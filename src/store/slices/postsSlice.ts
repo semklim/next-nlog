@@ -1,4 +1,5 @@
 import {postsService} from '@/lib/firebase/services';
+import {getIsoDate} from '@/lib/firebase/utils/getIsoDate';
 import type {CreatePostData, Post, PostsState} from '@/types';
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
 
@@ -44,8 +45,8 @@ export const createPost = createAsyncThunk(
         excerpt:
           postData.content.substring(0, 150) +
           (postData.content.length > 150 ? '...' : ''),
-        createdAt: new Date(),
-        updatedAt: new Date()
+        createdAt: getIsoDate(),
+        updatedAt: getIsoDate()
       } as Post;
     } catch (error) {
       return rejectWithValue(
@@ -188,14 +189,14 @@ const postsSlice = createSlice({
           state.items[index] = {
             ...state.items[index],
             ...action.payload,
-            updatedAt: new Date()
+            updatedAt: getIsoDate()
           };
         }
         if (state.currentPost?.id === action.payload.id) {
           state.currentPost = {
             ...state.currentPost,
             ...action.payload,
-            updatedAt: new Date()
+            updatedAt: getIsoDate()
           };
         }
       })

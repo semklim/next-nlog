@@ -1,4 +1,5 @@
 import {commentsService} from '@/lib/firebase/services';
+import {getIsoDate} from '@/lib/firebase/utils/getIsoDate';
 import type {Comment, CommentsState, CreateCommentData} from '@/types';
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
 
@@ -28,7 +29,7 @@ export const createComment = createAsyncThunk(
       return {
         id,
         ...commentData,
-        createdAt: new Date()
+        createdAt: getIsoDate()
       } as Comment;
     } catch (error) {
       return rejectWithValue(
