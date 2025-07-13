@@ -1,0 +1,14 @@
+{
+  "Manifest": {
+    "title": "Манифест",
+    "description": "Манифест"
+  },
+  "Error": {
+    "title": "Помилка",
+    "description": "Сталася помилка при обробці вашого запиту."
+  },
+  "IndexPage": {
+    "title": "Index Page",
+    "description": "Index Page"
+  }
+}

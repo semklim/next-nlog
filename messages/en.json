@@ -1,0 +1,14 @@
+{
+  "Manifest": {
+    "title": "Manifest",
+    "description": "Manifest"
+  },
+  "Error": {
+    "title": "Error",
+    "description": "An error occurred while processing your request."
+  },
+  "IndexPage": {
+    "title": "Index Page",
+    "description": "Index Page"
+  }
+}
