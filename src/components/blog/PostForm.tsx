@@ -3,14 +3,12 @@
 import { Button } from '@/components/ui/shadcn/button'
 import { Input } from '@/components/ui/shadcn/input'
 import { Label } from '@/components/ui/shadcn/label'
+import { ButtonLoader } from '@/components/ui/shadcn/loader'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/shadcn/select'
 import { Textarea } from '@/components/ui/shadcn/textarea'
-import { useAppDispatch, useAppSelector } from '@/hooks/redux'
+import { postsService } from '@/lib/firebase/services'
 import { createPostSchema, type CreatePostData } from '@/lib/validations/schemas'
-import { createPost } from '@/store/slices/postsSlice'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { AlertCircle, Loader2 } from 'lucide-react'
-import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 
 interface PostFormProps {
@@ -29,14 +27,11 @@ const categories = [
 ]
 
 export default function PostForm({ onSuccess }: PostFormProps) {
-  const dispatch = useAppDispatch()
-  const { loading, error } = useAppSelector(state => state.posts)
-  const [isSubmitting, setIsSubmitting] = useState(false)
 
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting, isLoading },
     reset,
     setValue,
     watch
@@ -53,26 +48,23 @@ export default function PostForm({ onSuccess }: PostFormProps) {
   const selectedCategory = watch('category')
 
   const onSubmit = async (data: CreatePostData) => {
-    setIsSubmitting(true)
     try {
-      await dispatch(createPost(data)).unwrap()
+      await postsService.createPost(data)
       reset()
       onSuccess?.()
     } catch (error) {
       console.error('Failed to create post:', error)
-    } finally {
-      setIsSubmitting(false)
     }
   }
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-      {error && (
+      {/* {errors && (
         <div className="flex items-center p-4 text-red-800 bg-red-50 rounded-lg">
           <AlertCircle className="h-5 w-5 mr-2" />
-          <span>{error}</span>
+          <span>{errors.root?.message}</span>
         </div>
-      )}
+      )} */}
 
       <div className="space-y-2">
         <Label htmlFor="title">Title *</Label>
@@ -138,12 +130,12 @@ export default function PostForm({ onSuccess }: PostFormProps) {
       <div className="flex flex-col sm:flex-row gap-4">
         <Button
           type="submit"
-          disabled={isSubmitting || loading}
-          className="flex-1"
+          disabled={isSubmitting || isLoading}
+          className="w-full sm:w-auto"
         >
-          {isSubmitting || loading ? (
+          {isSubmitting ? (
             <>
-              <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+              <ButtonLoader />
               Creating Post...
             </>
           ) : (
@@ -155,8 +147,8 @@ export default function PostForm({ onSuccess }: PostFormProps) {
           type="button"
           variant="outline"
           onClick={() => reset()}
-          disabled={isSubmitting || loading}
-          className="flex-1 sm:flex-initial"
+          disabled={isSubmitting || isLoading}
+          className="w-full sm:w-auto"
         >
           Clear Form
         </Button>

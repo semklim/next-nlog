@@ -4,25 +4,27 @@ import { Button } from '@/components/ui/shadcn/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/shadcn/card'
 import { Input } from '@/components/ui/shadcn/input'
 import { Label } from '@/components/ui/shadcn/label'
+import { ButtonLoader } from '@/components/ui/shadcn/loader'
 import { Separator } from '@/components/ui/shadcn/separator'
 import { Textarea } from '@/components/ui/shadcn/textarea'
-import { useAppDispatch, useAppSelector } from '@/hooks/redux'
+import { commentsService } from '@/lib/firebase/services'
+import { getIsoDate } from '@/lib/firebase/utils/getIsoDate'
 import { createCommentSchema, type CreateCommentData } from '@/lib/validations/schemas'
-import { createComment } from '@/store/slices/commentsSlice'
+import type { Comment } from '@/types'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { AlertCircle, CalendarIcon, Loader2, MessageCircle, UserIcon } from 'lucide-react'
+import { AlertCircle, CalendarIcon, MessageCircle, UserIcon } from 'lucide-react'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 
 interface CommentSectionProps {
   postId: string
+  initialComments: Comment[]
 }
 
-export default function CommentSection({ postId }: CommentSectionProps) {
-  const dispatch = useAppDispatch()
-  const { loading, error } = useAppSelector(state => state.comments)
-  const comments = useAppSelector(state => state.comments.byPostId[postId] || [])
+export default function CommentSection({ postId, initialComments }: CommentSectionProps) {
+  const [comments, setComments] = useState<Comment[]>(initialComments)
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
   const {
     register,
@@ -39,24 +41,36 @@ export default function CommentSection({ postId }: CommentSectionProps) {
 
   const onSubmit = async (data: CreateCommentData) => {
     setIsSubmitting(true)
+    setError(null)
+
     try {
-      await dispatch(createComment({ ...data, postId })).unwrap()
+      const commentId = await commentsService.createComment({ ...data, postId })
+      const newComment: Comment = {
+        id: commentId,
+        ...data,
+        postId,
+        createdAt: getIsoDate()
+      }
+
+      setComments(prev => [...prev, newComment])
       reset()
     } catch (error) {
       console.error('Failed to create comment:', error)
+      setError('Failed to create comment. Please try again.')
     } finally {
       setIsSubmitting(false)
     }
   }
 
-  const formatDate = (date: Date) => {
+  const formatDate = (date: string) => {
+    const dateObj = new Date(date)
     return new Intl.DateTimeFormat('en-US', {
       year: 'numeric',
       month: 'short',
       day: 'numeric',
       hour: '2-digit',
       minute: '2-digit'
-    }).format(date)
+    }).format(dateObj)
   }
 
   return (
@@ -108,12 +122,12 @@ export default function CommentSection({ postId }: CommentSectionProps) {
 
             <Button
               type="submit"
-              disabled={isSubmitting || loading}
+              disabled={isSubmitting}
               className="w-full md:w-auto"
             >
-              {isSubmitting || loading ? (
+              {isSubmitting ? (
                 <>
-                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                  <ButtonLoader />
                   Posting Comment...
                 </>
               ) : (

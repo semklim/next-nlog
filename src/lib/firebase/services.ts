@@ -15,7 +15,6 @@ import {
   where
 } from 'firebase/firestore';
 import {db} from './config';
-import {getIsoDate} from './utils/getIsoDate';
 
 // Posts Service
 export const postsService = {
@@ -52,14 +51,15 @@ export const postsService = {
       }
 
       const snapshot = await getDocs(q);
-      return snapshot.docs.map((doc) => {
-        return {
-          id: doc.id,
-          ...doc.data(),
-          createdAt: getIsoDate(doc.data().createdAt),
-          updatedAt: getIsoDate(doc.data().updatedAt)
-        } as Post;
-      });
+      return snapshot.docs.map(
+        (doc) =>
+          ({
+            id: doc.id,
+            ...doc.data(),
+            createdAt: doc.data().createdAt.toDate().toISOString(),
+            updatedAt: doc.data().updatedAt.toDate().toISOString()
+          }) as Post
+      );
     } catch (error) {
       console.error('Error fetching posts:', error);
       throw new Error('Failed to fetch posts');
@@ -76,8 +76,8 @@ export const postsService = {
         return {
           id: docSnap.id,
           ...data,
-          createdAt: getIsoDate(data.createdAt),
-          updatedAt: getIsoDate(data.updatedAt)
+          createdAt: data.createdAt.toDate().toISOString(),
+          updatedAt: data.updatedAt.toDate().toISOString()
         } as Post;
       }
       return null;
@@ -134,8 +134,8 @@ export const postsService = {
           ({
             id: doc.id,
             ...doc.data(),
-            createdAt: getIsoDate(doc.data().createdAt),
-            updatedAt: getIsoDate(doc.data().updatedAt)
+            createdAt: doc.data().createdAt.toDate().toISOString(),
+            updatedAt: doc.data().updatedAt.toDate().toISOString()
           }) as Post
       );
 
@@ -187,7 +187,7 @@ export const commentsService = {
           ({
             id: doc.id,
             ...doc.data(),
-            createdAt: getIsoDate(doc.data().createdAt)
+            createdAt: doc.data().createdAt.toDate().toISOString()
           }) as Comment
       );
     } catch (error) {

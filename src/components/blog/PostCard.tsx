@@ -33,7 +33,7 @@ export default function PostCard({ post }: PostCardProps) {
               {formatDate(post.createdAt)}
             </div>
           </div>
-          <CardTitle className="text-xl line-clamp-2 hover:text-blue-600 transition-colors">
+          <CardTitle className="text-xl line-clamp-2 hover:text-gray-700 hover:underline transition-colors">
             {post.title}
           </CardTitle>
         </CardHeader>

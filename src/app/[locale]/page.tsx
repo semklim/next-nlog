@@ -1,5 +1,6 @@
 import PostList from '@/components/blog/PostList';
 import MainLayout from '@/components/layout/MainLayout';
+import { postsService } from '@/lib/firebase/services';
 import { Locale } from 'next-intl';
 import { setRequestLocale } from 'next-intl/server';
 
@@ -10,6 +11,11 @@ type Props = {
 export default async function HomePage({ params }: Props) {
   const { locale } = await params;
   setRequestLocale(locale);
+
+  // Fetch posts server-side
+  const posts = await postsService.getPosts(9);
+
+  console.log(posts);
 
   return (
     <MainLayout>
@@ -23,7 +29,7 @@ export default async function HomePage({ params }: Props) {
           </p>
         </div>
 
-        <PostList />
+        <PostList initialPosts={posts} />
       </div>
     </MainLayout>
   );
