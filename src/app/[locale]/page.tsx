@@ -42,9 +42,6 @@ export default async function HomePage({ params, searchParams }: Props) {
     afterTimestamp: lastDocCursor
   });
 
-
-  console.log(result);
-
   // Create cursor for next page
   let nextCursor;
   if (result.hasNextPage && result.posts.length > 0) {
@@ -68,7 +65,6 @@ export default async function HomePage({ params, searchParams }: Props) {
           initialPosts={result.posts}
           currentPage={currentPage}
           hasNextPage={result.hasNextPage}
-          totalPosts={result.posts.length}
           nextCursor={nextCursor}
         />
       </div>

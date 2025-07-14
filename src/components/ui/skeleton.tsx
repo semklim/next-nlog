@@ -80,5 +80,5 @@ function PostDetailSkeleton() {
   )
 }
 
-export { PostCardSkeleton, PostDetailSkeleton, Skeleton }
+export { CommentSkeleton, PostCardSkeleton, PostDetailSkeleton, Skeleton }
 

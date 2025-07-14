@@ -143,7 +143,10 @@ export const postsService = {
   ): Promise<void> {
     try {
       const docRef = doc(db, 'posts', id);
-      const updateData: any = {
+      const updateData: Partial<CreateCommentData> & {
+        updatedAt: Date;
+        excerpt?: string;
+      } = {
         ...postData,
         updatedAt: new Date()
       };

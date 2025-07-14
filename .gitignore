@@ -10,3 +10,4 @@ messages/en.d.json.ts
 
 .env*
 !.env.example
+.vercel

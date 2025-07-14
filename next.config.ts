@@ -10,7 +10,7 @@ const baseConfig: NextConfig = {
   output: isStandalone ? 'standalone' : undefined,
   trailingSlash: true,
   eslint: {
-    dirs: ['.']
+    dirs: ['src']
   },
   images: {
     remotePatterns: HOST_NAMES.map((host) => ({

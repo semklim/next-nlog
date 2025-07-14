@@ -14,7 +14,6 @@ interface PostListProps {
   initialPosts: Post[]
   currentPage: number
   hasNextPage: boolean
-  totalPosts: number
   nextCursor?: string
 }
 
@@ -30,7 +29,7 @@ const categories = [
   { value: 'entertainment', label: 'Entertainment' }
 ]
 
-export default function PostList({ initialPosts, currentPage, hasNextPage, totalPosts, nextCursor }: PostListProps) {
+export default function PostList({ initialPosts, currentPage, hasNextPage, nextCursor }: PostListProps) {
   const router = useRouter()
   const searchParams = useSearchParams()
   const [isPending, startTransition] = useTransition()
