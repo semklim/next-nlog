@@ -36,22 +36,43 @@ export const postsService = {
   },
 
   async getPosts(
-    limitCount: number = 10,
-    lastDoc?: DocumentSnapshot
-  ): Promise<Post[]> {
+    limitCount: number = 9,
+    lastDoc?: DocumentSnapshot,
+    filters?: {
+      category?: string;
+      searchTerm?: string;
+      afterTimestamp?: Date;
+    }
+  ): Promise<{
+    posts: Post[];
+    hasNextPage: boolean;
+    lastDoc?: DocumentSnapshot;
+  }> {
     try {
+      // Fetch one extra document to check if there's a next page
+      const fetchLimit = limitCount + 1;
+
       let q = query(
         collection(db, 'posts'),
         orderBy('createdAt', 'desc'),
-        limit(limitCount)
+        limit(fetchLimit)
       );
 
-      if (lastDoc) {
+      // Add category filter
+      if (filters?.category) {
+        q = query(q, where('category', '==', filters.category));
+      }
+
+      // Add cursor for pagination using timestamp
+      if (filters?.afterTimestamp) {
+        q = query(q, where('createdAt', '<', filters.afterTimestamp));
+      } else if (lastDoc) {
+        // Fallback to document cursor if provided
         q = query(q, startAfter(lastDoc));
       }
 
       const snapshot = await getDocs(q);
-      return snapshot.docs.map(
+      let posts = snapshot.docs.map(
         (doc) =>
           ({
             id: doc.id,
@@ -60,6 +81,35 @@ export const postsService = {
             updatedAt: doc.data().updatedAt.toDate().toISOString()
           }) as Post
       );
+
+      // Apply search filter client-side (since Firestore doesn't have full-text search)
+      if (filters?.searchTerm) {
+        const searchLower = filters.searchTerm.toLowerCase();
+        posts = posts.filter(
+          (post) =>
+            post.title.toLowerCase().includes(searchLower) ||
+            post.content.toLowerCase().includes(searchLower) ||
+            post.author.toLowerCase().includes(searchLower)
+        );
+      }
+
+      // Check if there's a next page
+      const hasNextPage = posts.length > limitCount;
+
+      // Remove the extra document if we have one
+      if (hasNextPage) {
+        posts = posts.slice(0, limitCount);
+      }
+
+      // Get the last document for the next page cursor
+      const lastDocument =
+        posts.length > 0 ? snapshot.docs[posts.length - 1] : undefined;
+
+      return {
+        posts,
+        hasNextPage,
+        lastDoc: lastDocument
+      };
     } catch (error) {
       console.error('Error fetching posts:', error);
       throw new Error('Failed to fetch posts');

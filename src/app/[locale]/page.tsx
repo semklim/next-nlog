@@ -6,16 +6,51 @@ import { setRequestLocale } from 'next-intl/server';
 
 type Props = {
   params: Promise<{ locale: Locale }>;
+  searchParams: Promise<{
+    page?: string;
+    category?: string;
+    search?: string;
+    cursor?: string; // Add cursor for pagination
+  }>;
 };
 
-export default async function HomePage({ params }: Props) {
+export default async function HomePage({ params, searchParams }: Props) {
   const { locale } = await params;
+  const { page = '1', category, search, cursor } = await searchParams;
+
   setRequestLocale(locale);
 
-  // Fetch posts server-side
-  const posts = await postsService.getPosts(9);
+  // Pagination settings
+  const currentPage = parseInt(page) || 1;
+  const postsPerPage = 9;
 
-  console.log(posts);
+  // Decode cursor if present (base64 encoded timestamp)
+  let lastDocCursor;
+  if (cursor && currentPage > 1) {
+    try {
+      const decodedCursor = Buffer.from(cursor, 'base64').toString('utf-8');
+      lastDocCursor = new Date(decodedCursor);
+    } catch (error) {
+      console.error('Invalid cursor:', error);
+    }
+  }
+
+  // Fetch posts server-side with pagination and filters
+  const result = await postsService.getPosts(postsPerPage, undefined, {
+    category: category && category !== 'all' ? category : undefined,
+    searchTerm: search,
+    afterTimestamp: lastDocCursor
+  });
+
+
+  console.log(result);
+
+  // Create cursor for next page
+  let nextCursor;
+  if (result.hasNextPage && result.posts.length > 0) {
+    const lastPost = result.posts[result.posts.length - 1];
+    nextCursor = Buffer.from(lastPost.createdAt).toString('base64');
+  }
 
   return (
     <MainLayout>
@@ -29,7 +64,13 @@ export default async function HomePage({ params }: Props) {
           </p>
         </div>
 
-        <PostList initialPosts={posts} />
+        <PostList
+          initialPosts={result.posts}
+          currentPage={currentPage}
+          hasNextPage={result.hasNextPage}
+          totalPosts={result.posts.length}
+          nextCursor={nextCursor}
+        />
       </div>
     </MainLayout>
   );
