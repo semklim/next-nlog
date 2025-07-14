@@ -16,4 +16,7 @@ const app = initializeApp(firebaseConfig);
 // Initialize Firestore
 export const db = getFirestore(app);
 
+// Posts per page
+export const POSTS_PER_PAGE = 9;
+
 export default app;

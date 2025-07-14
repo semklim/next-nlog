@@ -1,14 +1,133 @@
 {
   "Manifest": {
-    "title": "Manifest",
-    "description": "Manifest"
+    "title": "Blog App - Discover Stories and Insights"
   },
-  "Error": {
-    "title": "Error",
-    "description": "An error occurred while processing your request."
+  "LocaleSwitcher": {
+    "label": "Change language",
+    "locale": "{locale, select, en {🇺🇸 English} uk {🇺🇦 Українська} other {Unknown}}"
   },
-  "IndexPage": {
-    "title": "Index Page",
-    "description": "Index Page"
+  "HomePage": {
+    "title": "Welcome to My Blog",
+    "subtitle": "Discover stories, insights, and ideas from our community of writers",
+    "meta": {
+      "title": "Blog App - Latest Posts and Stories",
+      "description": "Explore our collection of blog posts covering technology, lifestyle, travel, and more. Join our community of writers and readers."
+    }
+  },
+  "PostList": {
+    "searchPlaceholder": "Search posts...",
+    "allCategories": "All Categories",
+    "categories": {
+      "all": "All Categories",
+      "technology": "Technology",
+      "lifestyle": "Lifestyle",
+      "travel": "Travel",
+      "food": "Food",
+      "health": "Health",
+      "business": "Business",
+      "education": "Education",
+      "entertainment": "Entertainment"
+    },
+    "noPostsFound": "No Posts Found",
+    "noPostsYet": "No Posts Yet",
+    "adjustFilters": "Try adjusting your search or filter criteria.",
+    "beFirstToPost": "Be the first to create a post!",
+    "loading": "Loading posts...",
+    "showingResults": "Showing {count} posts",
+    "filteredResults": "Showing {count} of {total} posts for \"{search}\"",
+    "categoryResults": "Showing {count} posts in {category}"
+  },
+  "PostCard": {
+    "readMore": "Read More",
+    "by": "By",
+    "publishedOn": "Published on",
+    "category": "Category",
+    "estimatedRead": "{minutes} min read"
+  },
+  "PostDetail": {
+    "backToPosts": "← Back to Posts",
+    "sharePost": "Share this post",
+    "relatedPosts": "Related Posts",
+    "tags": "Tags",
+    "meta": {
+      "title": "{title} - Blog App",
+      "description": "{excerpt}"
+    }
+  },
+  "CreatePost": {
+    "title": "Create New Post",
+    "titleLabel": "Post Title",
+    "titlePlaceholder": "Enter your post title...",
+    "contentLabel": "Content",
+    "contentPlaceholder": "Write your post content here...",
+    "authorLabel": "Author",
+    "authorPlaceholder": "Your name",
+    "categoryLabel": "Category",
+    "selectCategory": "Select a category",
+    "publish": "Publish Post",
+    "cancel": "Cancel",
+    "publishing": "Publishing...",
+    "success": "Post published successfully!",
+    "error": "Failed to publish post. Please try again.",
+    "meta": {
+      "title": "Create New Post - Blog App",
+      "description": "Share your thoughts and stories with our community. Create a new blog post today."
+    }
+  },
+  "Navigation": {
+    "home": "Home",
+    "blog": "Blog",
+    "createPost": "Create Post",
+    "about": "About",
+    "contact": "Contact",
+    "language": "Language",
+    "menu": "Menu"
+  },
+  "Footer": {
+    "copyright": "© 2024 Blog App. All rights reserved.",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Service",
+    "contact": "Contact Us"
+  },
+  "Comments": {
+    "title": "Comments",
+    "addComment": "Add a comment",
+    "commentPlaceholder": "Write your comment here...",
+    "authorPlaceholder": "Your name",
+    "submit": "Submit Comment",
+    "submitting": "Submitting...",
+    "noComments": "No comments yet. Be the first to comment!",
+    "loadMore": "Load more comments",
+    "reply": "Reply",
+    "edit": "Edit",
+    "delete": "Delete",
+    "confirmDelete": "Are you sure you want to delete this comment?"
+  },
+  "Pagination": {
+    "previous": "Previous",
+    "next": "Next",
+    "page": "Page {number}",
+    "of": "of {total}",
+    "goToPage": "Go to page {number}"
+  },
+  "Errors": {
+    "general": "Something went wrong. Please try again.",
+    "networkError": "Network error. Please check your connection.",
+    "notFound": "The requested page was not found.",
+    "serverError": "Server error. Please try again later.",
+    "validationError": "Please check your input and try again."
+  },
+  "Loading": {
+    "posts": "Loading posts...",
+    "post": "Loading post...",
+    "comments": "Loading comments...",
+    "general": "Loading..."
+  },
+  "SEO": {
+    "siteName": "Blog App",
+    "defaultTitle": "Blog App - Stories, Insights & Ideas",
+    "defaultDescription": "Discover amazing stories, insights, and ideas from our community of writers. Explore posts about technology, lifestyle, travel, and more.",
+    "keywords": "blog, stories, articles, technology, lifestyle, travel, writing, community",
+    "author": "Blog App Team"
   }
 }

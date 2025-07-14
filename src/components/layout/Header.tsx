@@ -1,6 +1,7 @@
 import { Button } from '@/components/ui/shadcn/button'
 import { HomeIcon, PenIcon } from 'lucide-react'
 import LinkComponent from '../ui/LinkComponent'
+import LocaleSwitcher from '../ui/LocaleSwitcher'
 
 export default function Header() {
   return (
@@ -20,6 +21,8 @@ export default function Header() {
             <span>Write</span>
           </LinkComponent>
         </nav>
+
+        <LocaleSwitcher />
 
         <Button asChild>
           <LinkComponent href="/create" className="flex items-center space-x-2" variant="clean">

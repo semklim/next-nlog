@@ -1,49 +1,110 @@
 import { routing } from '@/i18n/routing';
-import { clsx } from 'clsx';
-import { hasLocale, Locale, NextIntlClientProvider } from 'next-intl';
-import { getTranslations, setRequestLocale } from 'next-intl/server';
-import { Inter } from 'next/font/google';
+import { generateOrganizationSchema, generateWebsiteSchema } from '@/lib/seo/jsonld';
+import StoreProvider from '@/store/StoreProvider';
+import type { Metadata } from 'next';
+import { Locale, NextIntlClientProvider } from 'next-intl';
+import { getMessages, getTranslations } from 'next-intl/server';
 import { notFound } from 'next/navigation';
-import { ReactNode } from 'react';
 import './styles.css';
 
-type Props = {
-  children: ReactNode;
-  params: Promise<{ locale: Locale }>;
-};
-
-const inter = Inter({ subsets: ['latin'] });
-
-export function generateStaticParams() {
-  return routing.locales.map((locale) => ({ locale }));
-}
-
-export async function generateMetadata(props: Omit<Props, 'children'>) {
-  const { locale } = await props.params;
-
-  const t = await getTranslations({ locale, namespace: 'Manifest' });
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations('SEO');
 
   return {
-    title: t('title')
+    title: {
+      template: `%s | ${t('siteName')}`,
+      default: t('defaultTitle'),
+    },
+    description: t('defaultDescription'),
+    keywords: t('keywords'),
+    authors: [{ name: t('author') }],
+    creator: t('author'),
+    publisher: t('siteName'),
+    formatDetection: {
+      email: false,
+      address: false,
+      telephone: false,
+    },
+    metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL || 'https://blog-app.com'),
+    alternates: {
+      canonical: '/',
+      languages: {
+        'en': '/en',
+        'uk': '/uk',
+      },
+    },
+    openGraph: {
+      type: 'website',
+      locale: locale === 'uk' ? 'uk_UA' : 'en_US',
+      siteName: t('siteName'),
+    },
+    twitter: {
+      card: 'summary_large_image',
+      creator: '@blogapp',
+    },
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: {
+        index: true,
+        follow: true,
+        'max-video-preview': -1,
+        'max-image-preview': 'large',
+        'max-snippet': -1,
+      },
+    },
   };
 }
 
-export default async function LocaleLayout({ children, params }: Props) {
-  // Ensure that the incoming `locale` is valid
+export default async function RootLayout({
+  children,
+  params,
+}: {
+  children: React.ReactNode;
+  params: Promise<{ locale: string }>;
+}) {
   const { locale } = await params;
-  if (!hasLocale(routing.locales, locale)) {
+
+  // Ensure that the incoming `locale` is valid
+  if (!routing.locales.includes(locale as Locale)) {
     notFound();
   }
 
-  // Enable static rendering
-  setRequestLocale(locale);
+  // Providing all messages to the client
+  const messages = await getMessages();
+
+  // Generate JSON-LD schemas
+  const websiteSchema = generateWebsiteSchema(locale);
+  const organizationSchema = generateOrganizationSchema(locale);
 
   return (
-    <html className="h-full" lang={locale}>
-      <body className={clsx(inter.className, 'flex h-full flex-col')}>
-        <NextIntlClientProvider>
-          {children}
-        </NextIntlClientProvider>
+    <html lang={locale}>
+      <head>
+        {/* JSON-LD Structured Data */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(websiteSchema),
+          }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(organizationSchema),
+          }}
+        />
+      </head>
+      <body>
+        <StoreProvider>
+          <NextIntlClientProvider messages={messages}>
+            {children}
+          </NextIntlClientProvider>
+        </StoreProvider>
       </body>
     </html>
   );

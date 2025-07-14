@@ -14,7 +14,7 @@ import {
   updateDoc,
   where
 } from 'firebase/firestore';
-import {db} from './config';
+import {db, POSTS_PER_PAGE} from './config';
 
 // Posts Service
 export const postsService = {
@@ -36,7 +36,7 @@ export const postsService = {
   },
 
   async getPosts(
-    limitCount: number = 9,
+    limitCount: number = POSTS_PER_PAGE,
     lastDoc?: DocumentSnapshot,
     filters?: {
       category?: string;

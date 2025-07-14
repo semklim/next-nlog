@@ -1,7 +1,6 @@
 export const pathnames = {
   '/': '/',
-  '/pathnames': '/pathnames',
-  '/test/[id]': '/test/[id]'
+  '/post/[id]': '/post/[id]'
 };
 
 export type AppPathnames = keyof typeof pathnames;

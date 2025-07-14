@@ -8,10 +8,11 @@ import { ButtonLoader } from '@/components/ui/shadcn/loader'
 import { Separator } from '@/components/ui/shadcn/separator'
 import { Textarea } from '@/components/ui/shadcn/textarea'
 import { commentsService } from '@/lib/firebase/services'
-import { getIsoDate } from '@/lib/firebase/utils/getIsoDate'
 import { createCommentSchema, type CreateCommentData } from '@/lib/validations/schemas'
 import type { Comment } from '@/types'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { format } from 'date-fns'
+import { enUS, uk } from 'date-fns/locale'
 import { AlertCircle, CalendarIcon, MessageCircle, UserIcon } from 'lucide-react'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
@@ -49,7 +50,7 @@ export default function CommentSection({ postId, initialComments }: CommentSecti
         id: commentId,
         ...data,
         postId,
-        createdAt: getIsoDate()
+        createdAt: new Date().toISOString()
       }
 
       setComments(prev => [...prev, newComment])
@@ -60,17 +61,6 @@ export default function CommentSection({ postId, initialComments }: CommentSecti
     } finally {
       setIsSubmitting(false)
     }
-  }
-
-  const formatDate = (date: string) => {
-    const dateObj = new Date(date)
-    return new Intl.DateTimeFormat('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    }).format(dateObj)
   }
 
   return (
@@ -159,7 +149,7 @@ export default function CommentSection({ postId, initialComments }: CommentSecti
                     </div>
                     <div className="flex items-center text-sm text-gray-500">
                       <CalendarIcon className="h-3 w-3 mr-1" />
-                      {formatDate(comment.createdAt)}
+                      {format(comment.createdAt, 'MMM d, yyyy, HH:mm', { locale: locale === 'uk' ? uk : enUS })}
                     </div>
                   </div>
                   <p className="text-gray-700 leading-relaxed">{comment.content}</p>

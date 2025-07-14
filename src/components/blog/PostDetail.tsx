@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/shadcn/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/shadcn/card'
 import { Separator } from '@/components/ui/shadcn/separator'
 import type { Comment, Post } from '@/types'
+import { format } from 'date-fns'
 import { ArrowLeft, CalendarIcon, UserIcon } from 'lucide-react'
 import Link from 'next/link'
 import CommentSection from './CommentSection'
@@ -15,16 +16,6 @@ interface PostDetailProps {
 }
 
 export default function PostDetail({ post, initialComments }: PostDetailProps) {
-  const formatDate = (date: string) => {
-    const dateObj = new Date(date)
-    return new Intl.DateTimeFormat('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    }).format(dateObj)
-  }
 
   return (
     <div className="max-w-4xl mx-auto space-y-8">
@@ -46,7 +37,7 @@ export default function PostDetail({ post, initialComments }: PostDetailProps) {
             </div>
             <div className="flex items-center text-sm text-gray-500">
               <CalendarIcon className="h-3 w-3 mr-1" />
-              {formatDate(post.createdAt)}
+              {format(post.createdAt, 'MMM d, yyyy, HH:mm')}
             </div>
           </div>
           <CardTitle className="text-3xl font-bold text-gray-900 mt-4">
