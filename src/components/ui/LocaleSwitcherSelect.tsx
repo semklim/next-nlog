@@ -10,12 +10,14 @@ type Props = {
   children: ReactNode;
   defaultValue: string;
   label: string;
+  className?: string;
 };
 
 export default function LocaleSwitcherSelect({
   children,
   defaultValue,
-  label
+  label,
+  className
 }: Props) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
@@ -39,6 +41,7 @@ export default function LocaleSwitcherSelect({
     <label
       className={cn(
         'relative text-gray-400',
+        className,
         isPending && 'transition-opacity [&:disabled]:opacity-30'
       )}
     >

@@ -45,7 +45,7 @@
     "estimatedRead": "{minutes} min read"
   },
   "PostDetail": {
-    "backToPosts": "← Back to Posts",
+    "backToPosts": "Back to Posts",
     "sharePost": "Share this post",
     "relatedPosts": "Related Posts",
     "tags": "Tags",
@@ -78,10 +78,7 @@
     "home": "Home",
     "blog": "Blog",
     "createPost": "Create Post",
-    "about": "About",
-    "contact": "Contact",
-    "language": "Language",
-    "menu": "Menu"
+    "create": "Create"
   },
   "Footer": {
     "copyright": "© 2024 Blog App. All rights reserved.",
@@ -129,5 +126,11 @@
     "defaultDescription": "Discover amazing stories, insights, and ideas from our community of writers. Explore posts about technology, lifestyle, travel, and more.",
     "keywords": "blog, stories, articles, technology, lifestyle, travel, writing, community",
     "author": "Blog App Team"
+  },
+  "ValidationErrors": {
+    "required": "This field is required",
+    "minLength": "This field must be at least {min} characters long",
+    "maxLength": "This field must be less than {max} characters long",
+    "cannotBeEmpty": "This field cannot be empty"
   }
 }

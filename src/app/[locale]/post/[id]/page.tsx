@@ -25,7 +25,7 @@ export default async function PostPage({ params }: Props) {
 
   return (
     <MainLayout>
-      <PostDetail post={post} initialComments={comments} />
+      <PostDetail post={post} initialComments={comments} locale={locale} />
     </MainLayout>
   );
 } 

@@ -6,16 +6,22 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/shadcn
 import { Separator } from '@/components/ui/shadcn/separator'
 import type { Comment, Post } from '@/types'
 import { format } from 'date-fns'
+import { enUS, uk } from 'date-fns/locale'
 import { ArrowLeft, CalendarIcon, UserIcon } from 'lucide-react'
+import { Locale, useTranslations } from 'next-intl'
 import Link from 'next/link'
-import CommentSection from './CommentSection'
+import CommentSection from './ComentSection/CommentSection'
 
 interface PostDetailProps {
   post: Post
   initialComments: Comment[]
+  locale: Locale
 }
 
-export default function PostDetail({ post, initialComments }: PostDetailProps) {
+export default function PostDetail({ post, initialComments, locale }: PostDetailProps) {
+  const t = useTranslations('PostDetail');
+  const tComments = useTranslations('Comments');
+  const fnsLocale = locale === 'uk' ? uk : enUS;
 
   return (
     <div className="max-w-4xl mx-auto space-y-8">
@@ -23,7 +29,7 @@ export default function PostDetail({ post, initialComments }: PostDetailProps) {
       <Button variant="outline" asChild>
         <Link href="/" className="flex items-center">
           <ArrowLeft className="h-4 w-4 mr-2" />
-          Back to Posts
+          {t('backToPosts')}
         </Link>
       </Button>
 
@@ -35,9 +41,9 @@ export default function PostDetail({ post, initialComments }: PostDetailProps) {
               <UserIcon className="h-4 w-4 text-gray-500" />
               <span className="text-sm text-gray-600">{post.author}</span>
             </div>
-            <div className="flex items-center text-sm text-gray-500">
+            <div className="flex items-center text-sm text-gray-500 capitalize">
               <CalendarIcon className="h-3 w-3 mr-1" />
-              {format(post.createdAt, 'MMM d, yyyy, HH:mm')}
+              {format(post.createdAt, 'MMM d, yyyy, HH:mm', { locale: fnsLocale })}
             </div>
           </div>
           <CardTitle className="text-3xl font-bold text-gray-900 mt-4">
@@ -66,7 +72,7 @@ export default function PostDetail({ post, initialComments }: PostDetailProps) {
       <div>
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-2xl font-bold text-gray-900">
-            Comments ({initialComments.length})
+            {tComments('title')} ({initialComments.length})
           </h2>
         </div>
 

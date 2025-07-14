@@ -41,14 +41,14 @@ export default function PostCard({ post }: PostCardProps) {
     <Card className="h-full flex flex-col hover:shadow-lg transition-shadow duration-200">
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between mb-2">
-          <Badge variant="secondary" className="text-xs">
-            {post.category && t(`PostList.categories.${post.category as keyof typeof messages.PostList.categories}`)}
-          </Badge>
-          <span className="text-xs text-gray-500">
+          {post.category && (<Badge variant="secondary" className="text-xs">
+            {t(`PostList.categories.${post.category as keyof typeof messages.PostList.categories}`)}
+          </Badge>)}
+          <span className="text-xs text-gray-500 ml-auto">
             {t('PostCard.estimatedRead', { minutes: estimateReadingTime(post.content).toString() })}
           </span>
         </div>
-        <h3 className="text-lg font-semibold line-clamp-2 hover:text-blue-600 transition-colors">
+        <h3 className="text-lg font-semibold line-clamp-2 transition-colors text-gray-900 hover:text-gray-600">
           <Link href={{
             pathname: '/post/[id]',
             params: {

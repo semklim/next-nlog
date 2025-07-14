@@ -9,6 +9,7 @@ import { Textarea } from '@/components/ui/shadcn/textarea'
 import { postsService } from '@/lib/firebase/services'
 import { createPostSchema, type CreatePostData } from '@/lib/validations/schemas'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useTranslations } from 'next-intl'
 import { useForm } from 'react-hook-form'
 
 interface PostFormProps {
@@ -27,7 +28,8 @@ const categories = [
 ]
 
 export default function PostForm({ onSuccess }: PostFormProps) {
-
+  const t = useTranslations('ValidationErrors');
+  const schema = createPostSchema(t);
   const {
     register,
     handleSubmit,
@@ -36,7 +38,7 @@ export default function PostForm({ onSuccess }: PostFormProps) {
     setValue,
     watch
   } = useForm<CreatePostData>({
-    resolver: zodResolver(createPostSchema),
+    resolver: zodResolver(schema),
     defaultValues: {
       title: '',
       content: '',
